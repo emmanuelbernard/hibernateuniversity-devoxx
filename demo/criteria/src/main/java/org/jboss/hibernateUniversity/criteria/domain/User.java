@@ -9,6 +9,12 @@ import javax.persistence.Id;
  */
 @Entity
 public class User {
+
+	public User(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
 	@Id @GeneratedValue
 	public Long getId() { return id; }
 	public void setId(Long id) {  this.id = id; }
