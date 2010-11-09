@@ -31,3 +31,7 @@ atlassian-ide-plugin.xml
 # Miscellaneous
 *.log
 .clover
+
+# H2
+#Exclude H2 db files
+db/*.db
