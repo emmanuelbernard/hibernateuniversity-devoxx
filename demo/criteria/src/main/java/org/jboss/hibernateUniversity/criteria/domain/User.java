@@ -1,8 +1,12 @@
 package org.jboss.hibernateUniversity.criteria.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  * @author Emmanuel Bernard
@@ -27,5 +31,10 @@ public class User {
 	public String getLastName() { return lastName; }
 	public void setLastName(String lastName) {  this.lastName = lastName; }
 	private String lastName;
+
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "owner")
+	public Set<Address> getAddresses() { return addresses; }
+	public void setAddresses(Set<Address> addresses) {  this.addresses = addresses; }
+	private Set<Address> addresses = new HashSet<Address>();
 
 }
