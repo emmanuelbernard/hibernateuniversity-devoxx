@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 @Entity
 public class User {
 
+	public User() {}
+
 	public User(String firstName, String lastName, Date birthDate, Gender gender, int credits, String username, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
