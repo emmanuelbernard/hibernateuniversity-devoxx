@@ -16,9 +16,20 @@ public class UserManagerTest {
 		WeldContainer weldContainer = weld.initialize();
 
 		final UserManager userManager = weldContainer.instance().select( UserManager.class ).get();
-		//User user = new User( "Emmanuel", "Bernard" );
 		userManager.createNewUsers();
 		
+		weld.shutdown();
+	}
+
+	@Test
+	public void testAvgCreditByGender() {
+		final Weld weld = new Weld();
+		WeldContainer weldContainer = weld.initialize();
+
+		final UserManager userManager = weldContainer.instance().select( UserManager.class ).get();
+
+		userManager.getAvgCreditByGender();
+
 		weld.shutdown();
 	}
 

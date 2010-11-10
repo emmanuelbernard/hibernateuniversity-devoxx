@@ -111,14 +111,15 @@ public class UserManager {
 		final Root<User> u = query.from( User.class );
 
 		final Path<Gender> gender = u.get( User_.gender );
+		gender.alias( "gender" );
 		final Selection<Double> credits = cb.avg( u.get( User_.credits ) ).alias( "credits" );
 		query.multiselect(
 				credits,
 				gender,
 				cb.count( u ) )
 			.where(
-					cb.between( u.get(User_.login).get( Login_.username ), "a", "g" ),
-					cb.isNull( u.get(User_.login).get( Login_.password ) )
+					cb.between( u.get(User_.login).get( Login_.username ), "a", "v" ),
+					cb.isNotNull( u.get(User_.login).get( Login_.password ) )
 			)
 
 			.groupBy( gender )
@@ -130,8 +131,9 @@ public class UserManager {
 
 		final TypedQuery<Tuple> typedQuery = em.createQuery( query );
 		final List<Tuple> list = typedQuery.getResultList();
-		list.get( 0 ).get( "credits" );
-		final Double average = list.get( 0 ).get( credits );
+		final Tuple tuple = list.get( 0 );
+		final Double average = tuple.get( credits );
+		System.out.println("Avg credit " + tuple.get( credits ) + " " + tuple.get( "gender" ) );
 		return list;
 	}
 
