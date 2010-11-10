@@ -11,7 +11,7 @@
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/./users"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.max_fetch_depth" value="3"/>
         </properties>
     </persistence-unit>
