@@ -9,14 +9,14 @@
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/./users"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/./querydsl"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.max_fetch_depth" value="3"/>
             <property name="hibernate.search.model_mapping"
                       value="org.jboss.hibernateUniversity.criteria.tools.HibernateSearchMapping"/>
             <property name="hibernate.search.default.indexBase"
-                      value="./index"/>
+                      value="../index"/>
         </properties>
     </persistence-unit>
 </persistence>
