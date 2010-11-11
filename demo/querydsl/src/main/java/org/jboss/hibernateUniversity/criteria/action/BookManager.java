@@ -35,6 +35,11 @@ public class BookManager {
 	Provider<FullTextEntityManager> lazyEM;
 
 	//get all books on 1977
+	/**
+	 * Type-safe query
+	 * range query
+	 * object to string conversion
+	 */
 	public void getAllBooksFrom1977() {
 		FullTextEntityManager em = lazyEM.get();
 		final QueryBuilder builder = em.getSearchFactory()
@@ -54,13 +59,17 @@ public class BookManager {
 
 		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
 		final List<Book> resultList = query
-				.setFirstResult( 0 ).setMaxResults( 20 )
+				.setFirstResult( 0 ).setMaxResults( 5 )
 				.getResultList();
 		displayListOfBooks( resultList, query );
 	}
 
-	//get all books stringly above 1000 pages
-	public void getAllBooksStringlyAbove1000Pages() {
+	//get all books strictly above 1000 pages
+	/**
+	 * Type-safe query
+	 * numeric query
+	 */
+	public void getAllBooksStrictlyAbove1000Pages() {
 		FullTextEntityManager em = lazyEM.get();
 		final QueryBuilder builder = em.getSearchFactory()
 				.buildQueryBuilder().forEntity( Book.class ).get();
@@ -74,13 +83,20 @@ public class BookManager {
 
 		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
 		final List<Book> resultList = query
-				.setFirstResult( 0 ).setMaxResults( 20 )
+				.setFirstResult( 0 ).setMaxResults( 5 )
 				.getResultList();
 		displayListOfBooks( resultList, query );
 	}
 
 	//get all book whose author name Emmanuel (Emma etc)
-	public void getAllBookWhoseAuthorIsEmmanuel() {
+	/**
+	 * Type-safe query
+	 * Association
+	 * exact match
+	 * wildcard match (lowere case)
+	 *
+	 */
+	public void getAllBooksWhoseAuthorIsEmmanuel() {
 		FullTextEntityManager em = lazyEM.get();
 		final QueryBuilder builder = em.getSearchFactory()
 				.buildQueryBuilder().forEntity( Book.class ).get();
@@ -91,20 +107,161 @@ public class BookManager {
 				.matching( "Emmanuel" )
 				.createQuery();
 
+//		final Query luceneQuery = builder
+//				.keyword()
+//					.wildcard()
+//				.onField( "author.firstName" )
+//				.matching( "em*" )
+//				.createQuery();
+
 		System.out.println(luceneQuery.toString()) ;
 
 		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
 		final List<Book> resultList = query
-				.setFirstResult( 0 ).setMaxResults( 20 )
+				.setFirstResult( 0 ).setMaxResults( 5 )
+				.getResultList();
+		displayListOfBooks( resultList, query );
+	}
+
+	//get all book whose author not named Emmanuel
+	/**
+	 * all except
+	 *
+	 */
+	public void getAllBooksWhoseAuthorIsNotEmmanuel() {
+		FullTextEntityManager em = lazyEM.get();
+		final QueryBuilder builder = em.getSearchFactory()
+				.buildQueryBuilder().forEntity( Book.class ).get();
+
+		final Query luceneQuery = builder
+				.all().except(
+					builder.keyword()
+					.onField( "author.firstName" )
+					.matching( "Emmanuel" )
+					.createQuery()
+				).createQuery();
+
+		System.out.println(luceneQuery.toString()) ;
+
+		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
+		final List<Book> resultList = query
+				.setFirstResult( 0 ).setMaxResults( 5 )
 				.getResultList();
 		displayListOfBooks( resultList, query );
 	}
 
 	//get books about plants and hands (title and description)
+	/**
+	 * multi fields
+	 * multi fields different boost
+	 * boolean query
+	 */
+	public void getAllBooksOnPlantsAndHands() {
+		FullTextEntityManager em = lazyEM.get();
+		final QueryBuilder builder = em.getSearchFactory()
+				.buildQueryBuilder().forEntity( Book.class ).get();
 
-	//get books about plents //fuzzy / then ngram
+		final Query luceneQuery =
+			builder
+				.bool()
+					.should( builder
+						.keyword()
+						.onField( "title" ).boostedTo( 4f )
+						.andField( "description" )
+						.matching( "plants" )
+						.createQuery() )
+					.should( builder
+						.keyword()
+						.onField( "title" ).boostedTo( 4f )
+						.andField( "description" )
+						.matching( "hands" )
+						.createQuery() )
+				.createQuery();
+
+		System.out.println(luceneQuery.toString()) ;
+
+		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
+		final List<Book> resultList = query
+				.setFirstResult( 0 ).setMaxResults( 5 )
+				.getResultList();
+		displayListOfBooks( resultList, query );
+	}
+
+	//get books about plents and hends (title and description)
+	/**
+	 * Fuzzy
+	 * N-Gram
+	 */
+	public void getAllBooksOnPlentsAndHends() {
+		FullTextEntityManager em = lazyEM.get();
+		final QueryBuilder builder = em.getSearchFactory()
+				.buildQueryBuilder().forEntity( Book.class ).get();
+
+		final Query luceneQuery =
+			builder
+				.bool()
+					.should( builder
+						.keyword()
+							//.fuzzy().withThreshold( .8f )
+						.onField( "title_ngram" ).boostedTo( 4f )
+						.andField( "description_ngram" )
+						.matching( "plents" )
+						.createQuery() )
+					.should( builder
+						.keyword()
+						.onField( "title_ngram" ).boostedTo( 4f )
+						.andField( "description_ngram" )
+						.matching( "hends" )
+						.createQuery() )
+				.createQuery();
+
+		System.out.println(luceneQuery.toString()) ;
+
+		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
+		final List<Book> resultList = query
+				.setFirstResult( 0 ).setMaxResults( 5 )
+				.getResultList();
+		displayListOfBooks( resultList, query );
+	}
 
 	//get books starred 5 in the last 10 years
+	/**
+	 * multi fields
+	 * multi fields different boost
+	 * boolean query
+	 */
+	public void getAllBooksStarred5InTheLast10Years() {
+		FullTextEntityManager em = lazyEM.get();
+		final QueryBuilder builder = em.getSearchFactory()
+				.buildQueryBuilder().forEntity( Book.class ).get();
+
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( System.currentTimeMillis() );
+		cal.add( Calendar.YEAR, -10 );
+
+		final Query luceneQuery =
+			builder
+				.bool()
+					.must( builder
+						.range()
+						.onField( "starred" )
+						.above( 5 )
+						.createQuery() )
+					.must( builder
+						.range()
+						.onField( "publicationDate" )
+						.above( new Date( cal.getTimeInMillis() ) )
+						.createQuery() )
+				.createQuery();
+
+		System.out.println(luceneQuery.toString()) ;
+
+		final FullTextQuery query = em.createFullTextQuery( luceneQuery, Book.class );
+		final List<Book> resultList = query
+				.setFirstResult( 0 ).setMaxResults( 5 )
+				.getResultList();
+		displayListOfBooks( resultList, query );
+	}
 
 	private void displayListOfBooks(List<Book> resultList, FullTextQuery query) {
 		System.out.println( "Number of results: " + query.getResultSize() );

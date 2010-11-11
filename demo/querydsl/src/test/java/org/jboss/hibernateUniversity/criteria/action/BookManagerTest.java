@@ -15,7 +15,7 @@ public class BookManagerTest {
 		WeldContainer weldContainer = weld.initialize();
 
 		final BookManager userManager = weldContainer.instance().select( BookManager.class ).get();
-		userManager.getAllBookWhoseAuthorIsEmmanuel();
+		userManager.getAllBooksStarred5InTheLast10Years();
 
 		weld.shutdown();
 	}
