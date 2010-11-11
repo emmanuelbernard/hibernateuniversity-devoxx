@@ -70,4 +70,20 @@ public class User {
 	public Login getLogin() { return login; }
 	public void setLogin(Login login) {  this.login = login; }
 	private Login login;
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append( "User" );
+		sb.append( "{id=" ).append( id );
+		sb.append( ", firstName='" ).append( firstName ).append( '\'' );
+		sb.append( ", lastName='" ).append( lastName ).append( '\'' );
+		sb.append( ", addresses=" ).append( addresses );
+		sb.append( ", birthDate=" ).append( birthDate );
+		sb.append( ", gender=" ).append( gender );
+		sb.append( ", credits=" ).append( credits );
+		sb.append( ", login=" ).append( login );
+		sb.append( '}' );
+		return sb.toString();
+	}
 }

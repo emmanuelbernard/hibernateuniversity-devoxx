@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Address {
 
+	public Address() {
+	}
+
 	public Address(String street, String city, String zipCode, User owner) {
 		this.street = street;
 		this.city = city;
