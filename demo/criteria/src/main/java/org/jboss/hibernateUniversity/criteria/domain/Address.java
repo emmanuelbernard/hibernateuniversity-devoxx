@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Address {
 
+	public Address() {
+	}
+
 	public Address(String street, String city, String zipCode, User owner) {
 		this.street = street;
 		this.city = city;
@@ -40,4 +43,16 @@ public class Address {
 	public User getOwner() { return owner; }
 	public void setOwner(User owner) {  this.owner = owner; }
 	private User owner;
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append( "Address" );
+		sb.append( "{id=" ).append( id );
+		sb.append( ", street='" ).append( street ).append( '\'' );
+		sb.append( ", city='" ).append( city ).append( '\'' );
+		sb.append( ", zipCode='" ).append( zipCode ).append( '\'' );
+		sb.append( '}' );
+		return sb.toString();
+	}
 }

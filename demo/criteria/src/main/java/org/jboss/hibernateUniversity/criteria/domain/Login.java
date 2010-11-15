@@ -21,4 +21,14 @@ public class Login {
 	public String getPassword() { return password; }
 	public void setPassword(String password) {  this.password = password; }
 	private String password;
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append( "Login" );
+		sb.append( "{username='" ).append( username ).append( '\'' );
+		sb.append( ", password='" ).append( password ).append( '\'' );
+		sb.append( '}' );
+		return sb.toString();
+	}
 }

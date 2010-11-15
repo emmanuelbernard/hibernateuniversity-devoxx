@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Persistence;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -65,4 +66,25 @@ public class User {
 	public Login getLogin() { return login; }
 	public void setLogin(Login login) {  this.login = login; }
 	private Login login;
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder();
+		sb.append( "User" );
+		sb.append( "{id=" ).append( id );
+		sb.append( ", firstName='" ).append( firstName ).append( '\'' );
+		sb.append( ", lastName='" ).append( lastName ).append( '\'' );
+		if ( Persistence.getPersistenceUtil().isLoaded( this, "addresses" ) ) {
+			sb.append( ", addresses=" ).append( addresses );
+		}
+		else {
+			sb.append( ", addresses=" ).append( "lazy" );
+		}
+		sb.append( ", birthDate=" ).append( birthDate );
+		sb.append( ", gender=" ).append( gender );
+		sb.append( ", credits=" ).append( credits );
+		sb.append( ", login=" ).append( login );
+		sb.append( '}' );
+		return sb.toString();
+	}
 }
