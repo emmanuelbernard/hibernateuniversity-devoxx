@@ -1,0 +1,63 @@
+Query DSL demo script
+=====================
+
++ Show intro
+show object creation
+persistence.xml file
+Show HibernateSearchMapping
+Show Book annotations
+Show @Field and @Field ngram
+explain on object change => index
+
++ //get all books from 1977
+Show getSearchFActory
+Show QueryBuilder
+Show simple keyword + date
+Show type-safety (ie date)
+Calendar pubDate = Calendar.getInstance();
+pubDate.set( 1977, 0, 01  );
+Date begin = new Date( pubDate.getTimeInMillis() );
+pubDate.set( 1977, 11, 31  );
+range from to
+
++ //get all books strictly above 1000 pages
+range above => numeric query
+exclude
+
++ //get all book whose author name Emmanuel (Emma etc)
+/**
+ * Type-safe query
+ * Association
+ * exact match
+ * wildcard match (lower case) TIP
+ */
+
++//get all book whose author not named Emmanuel
+/**
+ * all except
+  show query
+ *
+ */
+
++//get books about plants and hands (title and description)
+	/**
+	 * multi fields
+	 * multi fields different boost
+	 * boolean query
+	 */
+	 show queries
+
++//get books about plents and hends (title and description)
+	/**
+	 * Fuzzy   .fuzzy().withThreshold( .8f )
+	 * N-Gram  ngram fields
+	 */
+	 show queries
+
++ //get books starred 5 in the last 10 years
+	/**
+	 * range query + boolean (must)
+	 */
+	 
+
+
