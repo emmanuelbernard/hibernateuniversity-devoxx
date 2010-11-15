@@ -48,10 +48,12 @@ public class UserManager {
 
 		final CriteriaQuery<User> query = cb.createQuery( User.class );
 		final Root<User> u = query.from( User.class );
+		u.fetch( User_.addresses );
 
-		query.select( u ).where( cb.equal( u.get( User_.firstName ), "Emmanuel" ) );
+		query.select( u ).distinct( true ).where( cb.equal( u.get( User_.firstName ), "Emmanuel" ) );
 
 		final TypedQuery<User> typedQuery = em.createQuery( query );
+		typedQuery.setFirstResult( 0 ).setMaxResults( 20 );
 		final List<User> resultList = typedQuery.getResultList();
 		return  resultList;
 	}
