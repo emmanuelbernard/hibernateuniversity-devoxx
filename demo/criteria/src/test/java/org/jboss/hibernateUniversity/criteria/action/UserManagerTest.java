@@ -40,4 +40,16 @@ public class UserManagerTest {
 		weld.shutdown();
 	}
 
+	@Test
+	public void testAvgQuery() {
+		final Weld weld = new Weld();
+		WeldContainer weldContainer = weld.initialize();
+
+		final UserManager userManager = weldContainer.instance().select( UserManager.class ).get();
+
+		userManager.displayAvgCreditByGender();
+
+		weld.shutdown();
+	}
+
 }

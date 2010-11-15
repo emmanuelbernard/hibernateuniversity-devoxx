@@ -13,6 +13,7 @@ import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
@@ -67,10 +68,12 @@ public class UserManager {
 		final CriteriaQuery<User> query = cb.createQuery( User.class );
 		final Root<User> u = query.from( User.class );
 		final SetJoin<User,Address> a = u.join( User_.addresses );
+		u.fetch( User_.addresses );
 
 		query.select( u ).distinct( true ).where( cb.equal( a.get( Address_.city ), "Paris" ) );
 
 		final TypedQuery<User> typedQuery = em.createQuery( query );
+		typedQuery.setFirstResult( 0 ).setMaxResults( 20 );
 		final List<User> resultList = typedQuery.getResultList();
 		return  resultList;
 	}
@@ -84,28 +87,29 @@ public class UserManager {
 		final CriteriaQuery<User> query = cb.createQuery( User.class );
 		final Root<User> u = query.from( User.class );
 
-		final Calendar end = Calendar.getInstance();
-		end.setTimeInMillis( System.currentTimeMillis() );
-		end.add( Calendar.YEAR, - 30 );
-		final Calendar begin = Calendar.getInstance();
-		end.setTimeInMillis( System.currentTimeMillis() );
-		end.add( Calendar.YEAR, - 40 );
+		final Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis( System.currentTimeMillis() );
+		cal.add( Calendar.YEAR, - 30 );
+		Date end = new Date( cal.getTimeInMillis() );
+		cal.add( Calendar.YEAR, - 10 );
+		Date begin = new Date( cal.getTimeInMillis() );
 		query
 				.select( u )
 				.where(
 						cb.between(
 								u.get( User_.birthDate ),
-								new Date( end.getTimeInMillis() ),
-								new Date( begin.getTimeInMillis() ) ) );
+								begin,
+								end ) );
 
 		final TypedQuery<User> typedQuery = em.createQuery( query );
+		typedQuery.setFirstResult( 0 ).setMaxResults( 20 );
 		final List<User> resultList = typedQuery.getResultList();
 		return  resultList;
 	}
 
-	//get average user credit by gender limited to male and females and number on each level
+	//get average user credit by gender limited to male and females and count for each
 	@Transactional
-	public List<?> getAvgCreditByGender() {
+	public void displayAvgCreditByGender() {
 		EntityManager em = lazyEM.get();
 		CriteriaBuilder cb = em.getCriteriaBuilder();
 
@@ -115,15 +119,11 @@ public class UserManager {
 		final Path<Gender> gender = u.get( User_.gender );
 		gender.alias( "gender" );
 		final Selection<Double> credits = cb.avg( u.get( User_.credits ) ).alias( "credits" );
+
 		query.multiselect(
 				credits,
 				gender,
-				cb.count( u ) )
-			.where(
-					cb.between( u.get(User_.login).get( Login_.username ), "a", "v" ),
-					cb.isNotNull( u.get(User_.login).get( Login_.password ) )
-			)
-
+				cb.count( u ).alias( "nbr" ))
 			.groupBy( gender )
 				.having(
 						cb.in( gender)
@@ -132,11 +132,13 @@ public class UserManager {
 			.orderBy( cb.desc( gender ) );
 
 		final TypedQuery<Tuple> typedQuery = em.createQuery( query );
+		typedQuery.setFirstResult( 0 ).setMaxResults( 20 );
 		final List<Tuple> list = typedQuery.getResultList();
-		final Tuple tuple = list.get( 0 );
-		final Double average = tuple.get( credits );
-		System.out.println("Avg credit " + tuple.get( credits ) + " " + tuple.get( "gender" ) );
-		return list;
+
+		for (Tuple tuple : list) {
+			final Double average = tuple.get( credits );
+			System.err.println("Avg credit " + tuple.get( credits ) + " " + tuple.get( "gender" ) + " found " +  tuple.get( "nbr" ) + " times");
+		}
 	}
 
 	//get all users who live in cities that have users above 55 years old
