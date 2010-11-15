@@ -1,5 +1,8 @@
 package org.jboss.hibernateUniversity.criteria.action;
 
+import java.util.List;
+
+import org.jboss.hibernateUniversity.criteria.domain.User;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 import org.junit.Test;
@@ -22,13 +25,17 @@ public class UserManagerTest {
 	}
 
 	@Test
-	public void testAvgCreditByGender() {
+	public void testQueries() {
 		final Weld weld = new Weld();
 		WeldContainer weldContainer = weld.initialize();
 
 		final UserManager userManager = weldContainer.instance().select( UserManager.class ).get();
 
-		userManager.getAvgCreditByGender();
+		final List<?> users = userManager.getUsersBetween30And40();
+
+		for( Object o : users) {
+			System.err.println( o.toString() );
+		}
 
 		weld.shutdown();
 	}
