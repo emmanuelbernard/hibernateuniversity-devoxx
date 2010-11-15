@@ -1,0 +1,48 @@
+Criteria Query API demonstration
+================================
+
++ Metamodel generator
+
+Show Domain model
+Show Metamodel and explain
+Show changes to User (add, remove property) and compile
+explain remove, renaming => comilation error
+Show configuration of the metamodel (maven and IDE)
+
++ Queries
+
+++ show unit test and Weld in SE
+
+++ //get all users whose firstname is emmanuel
+show Criteria builder
+show Criteria Query
+show return object typed
+show Lazy address and fetch and distinct true
+
+++ //get all users living in Paris
+show join
+show type-safety
+Dont' forget to fetch
+
+++ //get all users between 30 and 40 years old
+Needs now - 30 years / 40 years (Calendar)
+create date on cal, then retract 10 and create begin date
+Use cb.between (40, 30)
+
+++//get average user credit by gender limited to male and females and count on each level
+Return multiple results Tuple or Object[]
+Get gender reference add gender alias
+get avg reference add alias
+
+groupBy
+having
+type-safety on cb.in .values
+
+show tuple get via gender and string
+
+could have returned a value object, cb.construct()
+
+++ Addition
+orderBy desc gender
+cb.isNotNull( password)
+cb.or( ... );
