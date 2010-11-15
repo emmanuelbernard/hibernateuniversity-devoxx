@@ -27,14 +27,12 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 @Transactional
 public class BookManager {
 
-	@Inject
-	EntityManagerFactory factory;
 	private Random random = new Random( );
 
 	@Inject
 	Provider<FullTextEntityManager> lazyEM;
 
-	//get all books on 1977
+	//get all books from 1977
 	/**
 	 * Type-safe query
 	 * range query
@@ -156,6 +154,7 @@ public class BookManager {
 	 * multi fields different boost
 	 * boolean query
 	 */
+	//HSEARCH-634
 	public void getAllBooksOnPlantsAndHands() {
 		FullTextEntityManager em = lazyEM.get();
 		final QueryBuilder builder = em.getSearchFactory()
@@ -226,9 +225,7 @@ public class BookManager {
 
 	//get books starred 5 in the last 10 years
 	/**
-	 * multi fields
-	 * multi fields different boost
-	 * boolean query
+	 * range query + boolean (must)
 	 */
 	public void getAllBooksStarred5InTheLast10Years() {
 		FullTextEntityManager em = lazyEM.get();
