@@ -151,8 +151,9 @@ public class UserManager {
 	private User createNewRandomUser() {
 		final Calendar cal = Calendar.getInstance();
 		cal.set( 19 * 100 + 50 + random.nextInt( 60 ), random.nextInt(12 ), random.nextInt( 28 ) );
+		final int userRand = random.nextInt();
 		User user = new User(
-				"Daniel" + random.nextInt(),
+				userRand % 20 == 0 ? "Emmanuel" : "Daniel" + userRand,
 				"Marie" + random.nextInt(),
 				new Date( cal.getTimeInMillis() ),
 				getGender(),
