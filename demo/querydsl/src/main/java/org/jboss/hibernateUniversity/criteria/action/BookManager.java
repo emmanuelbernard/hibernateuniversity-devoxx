@@ -17,6 +17,9 @@ import org.jboss.hibernateUniversity.criteria.domain.Gender;
 import org.jboss.hibernateUniversity.criteria.domain.User;
 import org.jboss.hibernateUniversity.criteria.tools.Transactional;
 
+import org.hibernate.CacheMode;
+import org.hibernate.Session;
+import org.hibernate.search.Search;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -394,5 +397,23 @@ public class BookManager {
 		firstname.add( "Mia" );
 		firstname.add( "Emmanuel" );
 
+	}
+
+	public void reindexBooks() {
+		FullTextEntityManager em = lazyEM.get();
+		try {
+			em.createIndexer( Book.class )
+					.batchSizeToLoadObjects( 100 )
+					.cacheMode( CacheMode.IGNORE )
+					.optimizeAfterPurge( true )
+					.optimizeOnFinish( true )
+					.purgeAllOnStart( true )
+					.threadsToLoadObjects( 5 )
+					.threadsForSubsequentFetching( 5 )
+					.startAndWait();
+		}
+		catch ( InterruptedException e ) {
+			//do something
+		}
 	}
 }
